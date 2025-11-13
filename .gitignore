@@ -1,0 +1,30 @@
+# Flutter/Dart related
+.dart_tool/
+.packages
+.pub/
+build/
+
+# Android
+**/android/local.properties
+**/android/key.properties
+**/android/app/debug.keystore
+
+# iOS
+**/ios/Flutter/.last_build_id
+Pods/
+Runner/GeneratedPluginRegistrant.*
+
+# Editor files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Other temp files
+*.lock

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'auth_gate.dart';
+import 'package:provider/provider.dart';
+import 'splash_screen.dart';
+import 'providers/cart_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,16 +18,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shreeji Khakhra',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Inter',
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFF97700)),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<CartProvider>(create: (_) => CartProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Shreeji Khakhra',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Inter',
+          useMaterial3: true,
+          // App theme colors per design guide
+          colorScheme: const ColorScheme.light(
+            primary: Color(0xFFF77F00), // Orange
+            onPrimary: Colors.white,
+            secondary: Color(0xFF7B3F00), // Brown
+            onSecondary: Colors.white,
+            background: Color(0xFFFFF4E0), // Cream
+            surface: Color(0xFFFFF8EC), // Slightly lighter cream
+            tertiary: Color(0xFFFFD700), // Gold accent
+          ),
+          scaffoldBackgroundColor: const Color(0xFFFFF4E0),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF77F00),
+              foregroundColor: Colors.white,
+            ),
+          ),
+          textTheme: const TextTheme(
+            titleLarge: TextStyle(
+                color: Color(0xFF7B3F00), fontWeight: FontWeight.bold),
+            bodyLarge: TextStyle(color: Color(0xFF4B2B00)),
+          ),
+        ),
+        home: const SplashScreen(),
       ),
-      home: const AuthGate(),
     );
   }
 }

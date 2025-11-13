@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'tabs/home_tab.dart';
 import 'tabs/profile_tab.dart';
+import 'screens/categories_screen.dart';
+import 'screens/cart_screen.dart';
+import 'package:provider/provider.dart';
+import 'providers/cart_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // List of the different pages (tabs)
   static const List<Widget> _widgetOptions = <Widget>[
     HomeTab(),
-    Text('Categories Screen'), // Placeholder
-    Text('Cart Screen'), // Placeholder
+    const CategoriesScreen(), // Placeholder
+    const CartScreen(), // Placeholder
     ProfileTab(),
   ];
 
@@ -128,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
+  selectedItemColor: Theme.of(context).colorScheme.primary,
+  unselectedItemColor: Color(0xFF7B3F00).withOpacity(0.6),
         showUnselectedLabels: true,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed, // Recommended for 4+ items

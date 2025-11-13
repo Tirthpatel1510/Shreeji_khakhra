@@ -4,13 +4,32 @@ import 'package:carousel_slider/carousel_slider.dart';
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
 
+  // Best sellers product data
+  static const List<Map<String, String>> bestSellersProducts = [
+    {'image': 'lib/assets/images/Jerra Khkhra.webp', 'name': 'Jerra Khakhra'},
+    {'image': 'lib/assets/images/Kothmir Marcha.jpg', 'name': 'Kothmir Marcha'},
+    {
+      'image': 'lib/assets/images/Manchurain Khakhra.jpg',
+      'name': 'Manchurain Khakhra'
+    },
+    {'image': 'lib/assets/images/masla khakhra.webp', 'name': 'Masla Khakhra'},
+    {'image': 'lib/assets/images/Methi Khakhra.webp', 'name': 'Methi Khakhra'},
+    {
+      'image': 'lib/assets/images/Peri Peri Khakhra.jpg',
+      'name': 'Peri Peri Khakhra'
+    },
+    {'image': 'lib/assets/images/Pizza Khakhra.jpg', 'name': 'Pizza Khakhra'},
+    {'image': 'lib/assets/images/Plain khakhra.jpg', 'name': 'Plain Khakhra'},
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // Placeholder data
+    // Slider images - using product images
     final List<String> promoImages = [
-      'https://via.placeholder.com/600x250.png/F97700/FFFFFF?text=Special+Offer',
-      'https://via.placeholder.com/600x250.png/333333/FFFFFF?text=New+Arrivals',
-      'https://via.placeholder.com/600x250.png/F97700/FFFFFF?text=Combo+Deals',
+      'lib/assets/images/Jerra Khkhra.webp',
+      'lib/assets/images/Peri Peri Khakhra.jpg',
+      'lib/assets/images/Pizza Khakhra.jpg',
+      'lib/assets/images/Manchurain Khakhra.jpg',
     ];
 
     return SingleChildScrollView(
@@ -20,7 +39,7 @@ class HomeTab extends StatelessWidget {
           // Promotional Banner
           CarouselSlider(
             options: CarouselOptions(
-              height: 180.0,
+              height: 250.0,
               autoPlay: true,
               enlargeCenterPage: true,
               aspectRatio: 16 / 9,
@@ -29,15 +48,17 @@ class HomeTab extends StatelessWidget {
             items: promoImages.map((i) {
               return Builder(
                 builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: NetworkImage(i),
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      color: const Color(0xFFFFF8EC),
+                      child: Image.asset(
+                        i,
                         fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
                       ),
                     ),
                   );
@@ -47,22 +68,12 @@ class HomeTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Categories Section
-          _buildSectionHeader(context, 'Categories'),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(child: _buildCategoryCard('Rounded Khakhra')),
-              const SizedBox(width: 16),
-              Expanded(child: _buildCategoryCard('Mobile Shape Khakhra')),
-            ],
-          ),
           const SizedBox(height: 24),
 
-          // Best Sellers Section
+          // Best Sellers Section (2x4 grid)
           _buildSectionHeader(context, 'Best Sellers'),
           const SizedBox(height: 12),
-          _buildProductCarousel(),
+          _buildProductGrid(context),
         ],
       ),
     );
@@ -81,61 +92,50 @@ class HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String title) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        height: 80,
-        alignment: Alignment.center,
-        child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      ),
-    );
-  }
-
-  Widget _buildProductCarousel() {
-    return SizedBox(
-      height: 220,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 5, // Placeholder count
-        itemBuilder: (context, index) {
-          return SizedBox(
-            width: 160,
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(12)),
-                    ),
-                    child: const Center(
-                        child: Icon(Icons.image, size: 50, color: Colors.grey)),
+  Widget _buildProductGrid(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        childAspectRatio: 3 / 4,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        children: bestSellersProducts.map((product) {
+          return Card(
+            color: Theme.of(context).colorScheme.surface,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(12)),
+                    child: Image.asset(product['image']!, fit: BoxFit.cover),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Methi Khakhra',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 4),
-                        Text('₹99.00', style: TextStyle(color: Colors.green)),
-                      ],
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(product['name']!,
+                          style: TextStyle(
+                              color: const Color(0xFF7B3F00),
+                              fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 6),
+                      Text('₹99.00',
+                          style: TextStyle(color: const Color(0xFFF77F00))),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }

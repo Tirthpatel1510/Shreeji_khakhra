@@ -7,7 +7,7 @@ class StorageService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 📤 Upload Profile Image + Update Firestore
+  //Upload Profile Image + Update Firestore
   Future<String?> uploadProfilePhoto(File file) async {
     try {
       final user = _auth.currentUser;

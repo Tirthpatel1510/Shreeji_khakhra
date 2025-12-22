@@ -7,6 +7,8 @@ import 'tabs/home_tab.dart';
 import 'screens/categories_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/profile_page.dart';
+import 'screens/order_history_screen.dart';
+import 'screens/search_screen.dart'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Default icon (no image)
+    // Default profile avatar
     Widget profileIcon = CircleAvatar(
       radius: 12,
       backgroundColor: Colors.grey[300],
@@ -79,12 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: CircleAvatar(
         radius: 12,
         backgroundColor: Colors.grey[300],
-        backgroundImage: (_profilePictureUrl != null &&
-                _profilePictureUrl!.isNotEmpty)
-            ? NetworkImage(_profilePictureUrl!)
-            : null,
-        child: (_profilePictureUrl == null ||
-                _profilePictureUrl!.isEmpty)
+        backgroundImage:
+            (_profilePictureUrl != null && _profilePictureUrl!.isNotEmpty)
+                ? NetworkImage(_profilePictureUrl!)
+                : null,
+        child: (_profilePictureUrl == null || _profilePictureUrl!.isEmpty)
             ? const Icon(Icons.person, size: 18, color: Colors.white)
             : null,
       ),
@@ -92,18 +93,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('lib/assets/images/logo.png', height: 40),
+        title: Image.asset('lib/assets/images/logo-bgremoved.png', height: 40),
         actions: [
+          // 🔍 SEARCH BUTTON 
           IconButton(
-            onPressed: () {},
             icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SearchScreen(),
+                ),
+              );
+            },
           ),
+
+          // 👜 ORDER HISTORY
           IconButton(
-            onPressed: () {},
-            icon: badges.Badge(
-              badgeContent: const Text('3', style: TextStyle(color: Colors.white)),
-              child: const Icon(Icons.shopping_cart_outlined),
-            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const OrderHistoryScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.shopping_bag_outlined),
           ),
           const SizedBox(width: 8),
         ],

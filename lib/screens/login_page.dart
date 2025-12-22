@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
                 'lib/assets/images/logo-bgremoved.png',
                 height: 120,
               ),
-            ),
+          ),
 
             const SizedBox(height: 20),
 

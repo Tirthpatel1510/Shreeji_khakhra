@@ -36,13 +36,24 @@ class CartProvider with ChangeNotifier {
 
   void changeQuantity(String productId, int delta) {
     if (!_items.containsKey(productId)) return;
+
     _items[productId]!.quantity += delta;
-    if (_items[productId]!.quantity <= 0) _items.remove(productId);
+
+    if (_items[productId]!.quantity <= 0) {
+      _items.remove(productId);
+    }
+
     notifyListeners();
   }
 
+  // EXISTING CLEAR METHOD
   void clear() {
     _items.clear();
     notifyListeners();
+  }
+
+  // ⭐ ADDED FOR COMPATIBILITY WITH CARTSCREEN
+  void clearCart() {
+    clear();  // reuse existing clear()
   }
 }

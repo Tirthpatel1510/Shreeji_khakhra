@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
 
           colorScheme: const ColorScheme.light(
-            primary: Color(0xFFF77F00), // Orange
+            primary: Color(0xFFF77F00), // Orange 
             onPrimary: Colors.white,
             secondary: Color(0xFF7B3F00), // Brown
             onSecondary: Colors.white,
@@ -51,7 +51,8 @@ class MyApp extends StatelessWidget {
           ),
 
           textTheme: const TextTheme(
-            titleLarge: TextStyle(
+            titleLarge: TextStyle(     
+
               color: Color(0xFF7B3F00),
               fontWeight: FontWeight.bold,
             ),

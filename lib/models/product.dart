@@ -24,7 +24,7 @@ final sampleProducts = [
     categoryId: 'c1',
     name: 'Plain Khakhra 200g',
     image: 'lib/assets/images/plain.png',
-    price: 40.0,
+    price: 1.0,
     description:
         'A simple whole wheat khakhra with a clean, homely taste and no strong spices. Light, crispy and perfect with pickles, chutneys or butter.',
   ),

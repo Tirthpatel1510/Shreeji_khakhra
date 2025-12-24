@@ -16,10 +16,20 @@ class OrderHistoryScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 2,
       ),
-
       body: StreamBuilder<List<OrderModel>>(
         stream: OrderService().getUserOrders(),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  'Failed to load orders. Please ensure you are logged in.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -58,7 +68,6 @@ class OrderHistoryScreen extends StatelessWidget {
                     )
                   ],
                 ),
-
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -73,10 +82,9 @@ class OrderHistoryScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: order.status == "Cancelled"
                                 ? Colors.red.shade100
@@ -182,7 +190,6 @@ class OrderHistoryScreen extends StatelessWidget {
                           },
                           child: const Text("View Details →"),
                         ),
-
                         if (order.status == "Pending")
                           TextButton(
                             onPressed: () {
@@ -226,7 +233,6 @@ class OrderHistoryScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-
               ...order.items.map((item) {
                 return ListTile(
                   leading: ClipRRect(
@@ -244,14 +250,11 @@ class OrderHistoryScreen extends StatelessWidget {
                   ),
                 );
               }).toList(),
-
               const SizedBox(height: 20),
-
               const Text(
                 "Delivery Address:",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-
               const SizedBox(height: 6),
               Text(
                 "${order.address['fullName']}\n"

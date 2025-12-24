@@ -23,7 +23,7 @@ class Address {
     required this.type,
   });
 
-  // ⭐ Required for saving in order
+  //Required for saving in order
   Map<String, dynamic> toMap() {
     return {
       "id": id,
@@ -38,7 +38,7 @@ class Address {
     };
   }
 
-  // ⭐ Required for reading from Firestore
+  //Required for reading from Firestore
   factory Address.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Address(
@@ -54,7 +54,7 @@ class Address {
     );
   }
 
-  // ⭐ FIX RADIO BUTTON NOT SELECTING
+  // FIX RADIO BUTTON NOT SELECTING
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

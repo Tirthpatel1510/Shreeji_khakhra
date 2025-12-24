@@ -12,11 +12,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp());   // ❌ no const
+  runApp(MyApp()); 
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});  // ❌ remove const
+  MyApp({super.key});  
 
   @override
   Widget build(BuildContext context) {

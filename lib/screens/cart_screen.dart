@@ -4,6 +4,7 @@ import '../providers/cart_provider.dart';
 import '../models/address_model.dart';
 import '../services/address_service.dart';
 import '../services/order_service.dart';
+import '../services/razorpay_service.dart';
 import '../models/order_model.dart';
 import 'order_success_screen.dart';
 
@@ -16,6 +17,65 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   Address? selectedAddress;
+  RazorpayService? _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = RazorpayService(
+      onSuccess: (res) async {
+        await _placeOrderAfterPayment();
+      },
+      onError: (err) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Payment failed: ${err.message}')),
+        );
+      },
+      onExternalWallet: (wallet) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('External wallet: ${wallet.walletName}')),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _razorpay?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _placeOrderAfterPayment() async {
+    final cart = Provider.of<CartProvider>(context, listen: false);
+    if (selectedAddress == null || cart.items.isEmpty) return;
+
+    final orderItems = cart.items.values.map((i) {
+      return {
+        "productId": i.product.id,
+        "name": i.product.name,
+        "price": i.product.price,
+        "image": i.product.image,
+        "quantity": i.quantity,
+      };
+    }).toList();
+
+    final order = OrderModel(
+      id: "",
+      totalAmount: cart.totalPrice,
+      items: List<Map<String, dynamic>>.from(orderItems),
+      address: selectedAddress!.toMap(),
+      date: DateTime.now(),
+    );
+
+    await OrderService().placeOrder(order);
+    cart.clearCart();
+
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const OrderSuccessScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +121,20 @@ class _CartScreenState extends State<CartScreen> {
                     child: StreamBuilder<List<Address>>(
                       stream: AddressService().getAddresses(),
                       builder: (context, snapshot) {
-                        // 🔴 FIX 1: Handle loading properly
+                        // FIX 1: Handle loading properly
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
 
-                        // 🔴 FIX 2: Handle error
+                        //  FIX 2: Handle error
                         if (snapshot.hasError) {
                           return const Center(
                               child: Text("Failed to load addresses"));
                         }
 
-                        // 🔴 FIX 3: Handle empty
+                        // FIX 3: Handle empty
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return const Center(child: Text("No address found"));
                         }
@@ -211,32 +271,14 @@ class _CartScreenState extends State<CartScreen> {
                         return;
                       }
 
-                      final orderItems = cart.items.values.map((i) {
-                        return {
-                          "productId": i.product.id,
-                          "name": i.product.name,
-                          "price": i.product.price,
-                          "image": i.product.image,
-                          "quantity": i.quantity,
-                        };
-                      }).toList();
-
-                      final order = OrderModel(
-                        id: "",
-                        totalAmount: cart.totalPrice,
-                        items: List<Map<String, dynamic>>.from(orderItems),
-                        address: selectedAddress!.toMap(),
-                        date: DateTime.now(),
-                      );
-
-                      await OrderService().placeOrder(order);
-                      cart.clearCart();
-
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const OrderSuccessScreen()),
-                      );
+                      try {
+                        // Amount in INR (Razorpay takes paise internally)
+                        _razorpay?.openCheckout(cart.totalPrice.round());
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Checkout not available: $e')),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
